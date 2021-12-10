@@ -1,5 +1,3 @@
-mod tests;
-
 mod vector2;
 use vector2::Vector2;
 
@@ -11,7 +9,7 @@ const SCREEN_SIZE: (f32, f32) = (1200.0, 900.0);
 const EDGE: f32 = 25.0;
 const LEFT_EDGE: f32 = 125.0;
 
-const DESIRED_FPS: u32 = 10;
+const DESIRED_FPS: u32 = 30;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum VeichleType {
@@ -59,7 +57,7 @@ impl Veichle {
         self.position = self.position + self.velocity;
         self.acceleration = 0.0 * self.acceleration;        
         self.target = None;
-        //self.rotation = Vector2::from_angle(self.rotation).angle_to(self.velocity);
+        self.rotation = self.velocity.angle();
     }
 
     pub fn steer(&mut self) {
@@ -94,7 +92,7 @@ impl Veichle {
                         -1.0 * _target
                     },
                     None => {
-                        Vector2::random(1.0)
+                        Vector2::random()
                     }
                 }
             },
@@ -134,7 +132,7 @@ impl Veichle {
                 let scale = [0.5, 0.5];
                 let sensory_range = 150.0;
                 let sensory_angle = PI;
-                let max_speed = 10.0;
+                let max_speed = 6.0;
                 let max_force = 2.0;
                 let pos = Vector2::from(200.0, 200.0);
                 (targets, scale, sensory_range, sensory_angle, max_speed, max_force, pos)

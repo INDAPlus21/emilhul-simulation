@@ -1,6 +1,5 @@
 use std::ops;
 use rand::Rng;
-use std::f32::consts::PI as PI;
 
 #[derive(PartialEq, Debug, Copy, Clone)]
 pub struct Vector2{
@@ -24,13 +23,23 @@ impl Vector2 {
     }
 
     pub fn from_angle(angle: f32) -> Self {
+        let mut a: f32 = angle.cos();
+        if a < 0.000001
+            && a > -0.000001 {
+            a = 0.0;
+        }
+        let mut b = angle.sin();
+        if  b < 0.000001
+        && b > -0.000001 {
+            b = 0.0;
+        }
         Self {
-            x: angle.cos(),
-            y: angle.sin(),
+            x: a,
+            y: b,
         }
     }
 
-    pub fn random(range: f32) -> Self {
+    pub fn random() -> Self {
         let a: f32 = rand::thread_rng().gen_range(-1.0..1.0);
         let b: f32 = rand::thread_rng().gen_range(-1.0..1.0);
         Self {
@@ -39,8 +48,8 @@ impl Vector2 {
         }
     }
 
-    pub fn angle(&mut self) -> f32 {
-        0.0
+    pub fn angle(self) -> f32 {
+        (self.y/self.x).atan()
     }
 
     pub fn angle_to(self, other: Vector2) -> f32 {
@@ -116,6 +125,7 @@ impl ops::Mul<Vector2> for f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::f32::consts::PI as PI;
 
     #[test]
     fn it_works() {
@@ -203,5 +213,11 @@ mod tests {
         let a = Vector2::from(1.0, 0.0);
         let b = Vector2::from_angle(PI/2.0);
         assert_eq!(a.angle_to(b), PI/2.0);
+    }
+
+    #[test]
+    fn vector2_angle() {
+        let a = Vector2::from_angle(PI/2.0);
+        assert_eq!(a.angle(), PI/2.0);
     }
 }
